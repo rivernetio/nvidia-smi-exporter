@@ -15,7 +15,7 @@ const nvidiaSmiCmd = "nvidia-smi"
 
 func fake_metrics(response http.ResponseWriter) {
 	var result []string
-	result = append(result, "nvidia_fan_speed{gpu=\"0\", name=\"Tesla K80\"} [Not Supported]")
+	result = append(result, "nvidia_fan_speed{gpu=\"0\", name=\"Tesla K80\"} 69")
 	result = append(result, "nvidia_temperature_gpu{gpu=\"0\", name=\"Tesla K80\"} 32")
 	result = append(result, "nvidia_clocks_gr{gpu=\"0\", name=\"Tesla K80\"} 324")
 	result = append(result, "nvidia_clocks_sm{gpu=\"0\", name=\"Tesla K80\"} 324")
@@ -27,7 +27,7 @@ func fake_metrics(response http.ResponseWriter) {
 	result = append(result, "nvidia_memory_free{gpu=\"0\", name=\"Tesla K80\"} 4576")
 	result = append(result, "nvidia_memory_used{gpu=\"0\", name=\"Tesla K80\"} 6865")
 	
-	result = append(result, "nvidia_fan_speed{gpu=\"1\", name=\"Tesla K80\"} [Not Supported]")
+	result = append(result, "nvidia_fan_speed{gpu=\"1\", name=\"Tesla K80\"} 69")
 	result = append(result, "nvidia_temperature_gpu{gpu=\"1\", name=\"Tesla K80\"} 32")
 	result = append(result, "nvidia_clocks_gr{gpu=\"1\", name=\"Tesla K80\"} 324")
 	result = append(result, "nvidia_clocks_sm{gpu=\"1\", name=\"Tesla K80\"} 324")
