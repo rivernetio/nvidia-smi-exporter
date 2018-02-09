@@ -37,7 +37,7 @@ func fake_metrics(response http.ResponseWriter) {
 	result = append(result, "nvidia_utilization_memory{gpu=\"1\", name=\"Tesla K80\"} 10")
 	result = append(result, "nvidia_memory_total{gpu=\"1\", name=\"Tesla K80\"} 11441")
 	result = append(result, "nvidia_memory_free{gpu=\"1\", name=\"Tesla K80\"} 4576")
-	result = append(result, "nvidia_memory_used{gpu=\"1\", name=\"Tesla K80\"} 6865")
+	result = append(result, "nvidia_memory_used{gpu=\"1\", name=\"Tesla K80\"} 6865\n")
 
 	fmt.Fprintf(response, strings.Join(result, "\n"))
 }
