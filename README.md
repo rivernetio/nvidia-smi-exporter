@@ -1,5 +1,6 @@
 # nvidia-smi-exporter
 Nvidia SMI metrics exporter for Prometheus
+This work is from https://github.com/petrgrishin/nvidia-smi-exporter
 
 ## Start daemon
 ```
