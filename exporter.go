@@ -4,14 +4,17 @@ import (
 	"bytes"
 	"encoding/csv"
 	"fmt"
-	"strings"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
+	"time"
 )
 
 const nvidiaSmiCmd = "nvidia-smi"
+
+var shouldExit bool
 
 func fake_metrics(response http.ResponseWriter) {
 	var result []string
@@ -26,7 +29,7 @@ func fake_metrics(response http.ResponseWriter) {
 	result = append(result, "nvidia_memory_total{gpu=\"0\", name=\"Tesla K80\"} 11441")
 	result = append(result, "nvidia_memory_free{gpu=\"0\", name=\"Tesla K80\"} 4576")
 	result = append(result, "nvidia_memory_used{gpu=\"0\", name=\"Tesla K80\"} 6865")
-	
+
 	result = append(result, "nvidia_fan_speed{gpu=\"1\", name=\"Tesla K80\"} 69")
 	result = append(result, "nvidia_temperature_gpu{gpu=\"1\", name=\"Tesla K80\"} 32")
 	result = append(result, "nvidia_clocks_gr{gpu=\"1\", name=\"Tesla K80\"} 324")
@@ -43,6 +46,16 @@ func fake_metrics(response http.ResponseWriter) {
 }
 
 func metrics(response http.ResponseWriter, request *http.Request) {
+
+	defer func() {
+		if shouldExit {
+			log.Printf("recive exit sig, exit.\n")
+			go func() {
+				time.Sleep(1 * time.Second)
+				os.Exit(0)
+			}()
+		}
+	}()
 
 	out, err := exec.Command(
 		nvidiaSmiCmd,
@@ -86,7 +99,13 @@ func home(response http.ResponseWriter, request *http.Request) {
 	fmt.Fprint(response, "<html><head><title>Nvidia SMI Exporter</title></head><body><h1>Nvidia SMI Exporter</h1><p><a href=\"/metrics\">Metrics</a></p></body></html>")
 }
 
+func exit(response http.ResponseWriter, request *http.Request) {
+	shouldExit = true
+	fmt.Fprint(response, "exiting")
+}
+
 func main() {
+	shouldExit = false
 	addr := ":9102"
 	if len(os.Args) > 1 {
 		addr = ":" + os.Args[1]
@@ -94,8 +113,9 @@ func main() {
 
 	http.HandleFunc("/metrics", metrics)
 	http.HandleFunc("/", home)
+	http.HandleFunc("/exit", exit)
 
-	log.Printf("Listen port http://localhost%s\n", addr)
+	log.Printf("I-Listen port http://localhost%s\n", addr)
 
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
