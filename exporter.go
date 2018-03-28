@@ -18,7 +18,6 @@ var shouldExit bool
 
 func fake_metrics(response http.ResponseWriter) {
 	var result []string
-	result = append(result, "nvidia_fan_speed{gpu=\"0\", name=\"Tesla K80\"} 69")
 	result = append(result, "nvidia_temperature_gpu{gpu=\"0\", name=\"Tesla K80\"} 32")
 	result = append(result, "nvidia_clocks_gr{gpu=\"0\", name=\"Tesla K80\"} 324")
 	result = append(result, "nvidia_clocks_sm{gpu=\"0\", name=\"Tesla K80\"} 324")
@@ -30,7 +29,6 @@ func fake_metrics(response http.ResponseWriter) {
 	result = append(result, "nvidia_memory_free{gpu=\"0\", name=\"Tesla K80\"} 4576")
 	result = append(result, "nvidia_memory_used{gpu=\"0\", name=\"Tesla K80\"} 6865")
 
-	result = append(result, "nvidia_fan_speed{gpu=\"1\", name=\"Tesla K80\"} 69")
 	result = append(result, "nvidia_temperature_gpu{gpu=\"1\", name=\"Tesla K80\"} 32")
 	result = append(result, "nvidia_clocks_gr{gpu=\"1\", name=\"Tesla K80\"} 324")
 	result = append(result, "nvidia_clocks_sm{gpu=\"1\", name=\"Tesla K80\"} 324")
@@ -59,7 +57,7 @@ func metrics(response http.ResponseWriter, request *http.Request) {
 
 	out, err := exec.Command(
 		nvidiaSmiCmd,
-		"--query-gpu=name,index,fan.speed,temperature.gpu,clocks.gr,clocks.sm,clocks.mem,power.draw,utilization.gpu,utilization.memory,memory.total,memory.free,memory.used",
+		"--query-gpu=name,index,temperature.gpu,clocks.gr,clocks.sm,clocks.mem,power.draw,utilization.gpu,utilization.memory,memory.total,memory.free,memory.used",
 		"--format=csv,noheader,nounits").Output()
 
 	if err != nil {
@@ -78,7 +76,7 @@ func metrics(response http.ResponseWriter, request *http.Request) {
 	}
 
 	metricList := []string{
-		"nvidia_fan_speed", "nvidia_temperature_gpu", "nvidia_clocks_gr", "nvidia_clocks_sm", "nvidia_clocks_mem", "nvidia_power_draw",
+		"nvidia_temperature_gpu", "nvidia_clocks_gr", "nvidia_clocks_sm", "nvidia_clocks_mem", "nvidia_power_draw",
 		"nvidia_utilization_gpu", "nvidia_utilization_memory", "nvidia_memory_total", "nvidia_memory_free", "nvidia_memory_used"}
 
 	result := ""
