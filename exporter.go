@@ -84,9 +84,12 @@ func metrics(response http.ResponseWriter, request *http.Request) {
 		name := fmt.Sprintf("%s", row[0])
 		index := fmt.Sprintf("%s", row[1])
 		for idx, value := range row[2:] {
-			result = fmt.Sprintf(
-				"%s%s{gpu=\"%s\", name=\"%s\"} %s\n", result,
-				metricList[idx], index, name, value)
+			if(value!="[N/A]"){
+                result = fmt.Sprintf(
+                    "%s%s{gpu=\"%s\", name=\"%s\"} %s\n", result,
+                    metricList[idx], index, name, value)
+			}
+
 		}
 	}
 
@@ -104,7 +107,7 @@ func exit(response http.ResponseWriter, request *http.Request) {
 
 func main() {
 	shouldExit = false
-	addr := ":9102"
+	addr := "0.0.0.0:9102"
 	if len(os.Args) > 1 {
 		addr = ":" + os.Args[1]
 	}
